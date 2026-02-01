@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pregnancy Stages Quiz Game 🤰</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 150px;
+            box-shadow: 0 5px 15px rgba(240, 147, 251, 0.4);
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .timer-box {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .score-box {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .question-box {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(250, 112, 154, 0.3);
+        }
+
+        .question-number {
+            color: white;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .question-text {
+            color: #333;
+            font-size: 1.3em;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .answers {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .answer-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 25px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .answer-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .answer-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .answer-btn.correct {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            animation: pulse 0.5s ease;
+        }
+
+        .answer-btn.incorrect {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            animation: shake 0.5s ease;
+        }
+
+        .answer-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .start-screen, .end-screen {
+            text-align: center;
+        }
+
+        .start-btn, .restart-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.5);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .start-btn:hover, .restart-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(245, 87, 108, 0.7);
+        }
+
+        .emoji {
+            font-size: 4em;
+            margin: 20px 0;
+        }
+
+        .final-score {
+            font-size: 3em;
+            color: #667eea;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .feedback {
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 15px;
+            font-weight: bold;
+            min-height: 30px;
+        }
+
+        .feedback.correct {
+            color: #11998e;
+        }
+
+        .feedback.incorrect {
+            color: #eb3349;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Start Screen -->
+        <div id="startScreen" class="start-screen">
+            <h1>🤰 Pregnancy Quiz 👶</h1>
+            <div class="emoji">🎮</div>
+            <h2 class="subtitle">Test Your Knowledge on Pregnancy Stages!</h2>
+            <p style="margin: 20px 0; font-size: 1.1em; color: #666;">
+                • 10 Questions<br>
+                • 20 Seconds per Question<br>
+                • 10 Points per Correct Answer<br>
+                • Maximum Score: 100 Points
+            </p>
+            <button class="start-btn" onclick="startQuiz()">Start Quiz! 🚀</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quizScreen" class="hidden">
+            <h1>🤰 Pregnancy Quiz</h1>
+            <p class="subtitle">Answer as many as you can!</p>
+            
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-box timer-box">
+                    <div class="stat-label">Time Left</div>
+                    <div class="stat-value" id="timer">20</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Question</div>
+                    <div class="stat-value" id="questionNum">1/10</div>
+                </div>
+                <div class="stat-box score-box">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="score">0</div>
+                </div>
+            </div>
+
+            <div class="question-box">
+                <div class="question-number" id="questionLabel">Question 1</div>
+                <div class="question-text" id="questionText"></div>
+            </div>
+
+            <div class="answers" id="answersContainer"></div>
+            
+            <div class="feedback" id="feedback"></div>
+        </div>
+
+        <!-- End Screen -->
+        <div id="endScreen" class="hidden end-screen">
+            <h1>Quiz Complete! 🎉</h1>
+            <div class="emoji" id="finalEmoji">🏆</div>
+            <div class="final-score" id="finalScore"></div>
+            <p id="finalMessage" style="font-size: 1.3em; margin: 20px 0; color: #666;"></p>
+            <button class="restart-btn" onclick="restartQuiz()">Play Again! 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "How many trimesters are there in pregnancy?",
+                answers: ["2", "3", "4", "5"],
+                correct: 1
+            },
+            {
+                question: "How long does each trimester last?",
+                answers: ["About 2 months", "About 3 months", "About 4 months", "About 5 months"],
+                correct: 1
+            },
+            {
+                question: "During which trimester does the embryo develop into a foetus?",
+                answers: ["First trimester", "Second trimester", "Third trimester", "All trimesters"],
+                correct: 0
+            },
+            {
+                question: "How long is a full pregnancy?",
+                answers: ["30 weeks", "35 weeks", "40 weeks", "45 weeks"],
+                correct: 2
+            },
+            {
+                question: "When does the baby's gender become visible?",
+                answers: ["First trimester", "Second trimester", "Third trimester", "At birth"],
+                correct: 1
+            },
+            {
+                question: "What symptom is common in the first trimester?",
+                answers: ["Frequent urination", "Feeling tired or nauseous", "Sleep difficulties", "Swollen feet"],
+                correct: 1
+            },
+            {
+                question: "During which trimester can the mother feel the foetus moving?",
+                answers: ["First trimester", "Second trimester", "Third trimester", "Never"],
+                correct: 1
+            },
+            {
+                question: "Which weeks are included in the third trimester?",
+                answers: ["Weeks 1-13", "Weeks 13-27", "Weeks 28-40+", "Weeks 35-45"],
+                correct: 2
+            },
+            {
+                question: "When do major organs begin to form?",
+                answers: ["First trimester", "Second trimester", "Third trimester", "After birth"],
+                correct: 0
+            },
+            {
+                question: "Around which week is full-term reached?",
+                answers: ["30 weeks", "35 weeks", "39 weeks", "45 weeks"],
+                correct: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let timeLeft = 20;
+        let timerInterval;
+        let answered = false;
+
+        function startQuiz() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('hidden');
+            currentQuestion = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentQuestion >= questions.length) {
+                endQuiz();
+                return;
+            }
+
+            answered = false;
+            timeLeft = 20;
+            updateTimer();
+            
+            const q = questions[currentQuestion];
+            document.getElementById('questionLabel').textContent = `Question ${currentQuestion + 1}`;
+            document.getElementById('questionText').textContent = q.question;
+            document.getElementById('questionNum').textContent = `${currentQuestion + 1}/10`;
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('feedback').className = 'feedback';
+            
+            const progress = ((currentQuestion) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            const answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML = '';
+            
+            q.answers.forEach((answer, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = answer;
+                btn.onclick = () => checkAnswer(index);
+                answersContainer.appendChild(btn);
+            });
+
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimer();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    if (!answered) {
+                        showCorrectAnswer();
+                        document.getElementById('feedback').textContent = '⏰ Time\'s up!';
+                        document.getElementById('feedback').className = 'feedback incorrect';
+                        setTimeout(() => {
+                            currentQuestion++;
+                            loadQuestion();
+                        }, 2000);
+                    }
+                }
+            }, 1000);
+        }
+
+        function updateTimer() {
+            const timerElement = document.getElementById('timer');
+            timerElement.textContent = timeLeft;
+            if (timeLeft <= 5) {
+                timerElement.style.color = '#ff4444';
+            } else {
+                timerElement.style.color = 'white';
+            }
+        }
+
+        function checkAnswer(selectedIndex) {
+            if (answered) return;
+            
+            answered = true;
+            clearInterval(timerInterval);
+            
+            const buttons = document.querySelectorAll('.answer-btn');
+            const correctIndex = questions[currentQuestion].correct;
+            
+            buttons.forEach(btn => btn.disabled = true);
+            
+            if (selectedIndex === correctIndex) {
+                buttons[selectedIndex].classList.add('correct');
+                score += 10;
+                document.getElementById('score').textContent = score;
+                document.getElementById('feedback').textContent = '✅ Correct! +10 points';
+                document.getElementById('feedback').className = 'feedback correct';
+            } else {
+                buttons[selectedIndex].classList.add('incorrect');
+                buttons[correctIndex].classList.add('correct');
+                document.getElementById('feedback').textContent = '❌ Wrong! The correct answer is highlighted.';
+                document.getElementById('feedback').className = 'feedback incorrect';
+            }
+            
+            setTimeout(() => {
+                currentQuestion++;
+                loadQuestion();
+            }, 2500);
+        }
+
+        function showCorrectAnswer() {
+            const buttons = document.querySelectorAll('.answer-btn');
+            const correctIndex = questions[currentQuestion].correct;
+            buttons.forEach(btn => btn.disabled = true);
+            buttons[correctIndex].classList.add('correct');
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('endScreen').classList.remove('hidden');
+            
+            document.getElementById('finalScore').textContent = `${score} / 100`;
+            
+            let emoji, message;
+            if (score === 100) {
+                emoji = '🏆';
+                message = 'Perfect Score! You\'re a pregnancy expert!';
+            } else if (score >= 80) {
+                emoji = '🌟';
+                message = 'Excellent! You know your pregnancy facts!';
+            } else if (score >= 60) {
+                emoji = '👍';
+                message = 'Good job! Keep learning!';
+            } else if (score >= 40) {
+                emoji = '📚';
+                message = 'Not bad! Study a bit more!';
+            } else {
+                emoji = '💪';
+                message = 'Keep trying! Practice makes perfect!';
+            }
+            
+            document.getElementById('finalEmoji').textContent = emoji;
+            document.getElementById('finalMessage').textContent = message;
+        }
+
+        function restartQuiz() {
+            document.getElementById('endScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+            score = 0;
+            currentQuestion = 0;
+            document.getElementById('score').textContent = '0';
+        }
+    </script>
+</body>
+</html>
